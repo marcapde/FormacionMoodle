@@ -45,7 +45,7 @@ class joke_component implements renderable, templatable {
      * @param $resp
      */
     public function __construct($resp) {
-        $this->resp=$resp;
+        $this->resp = $resp;
     }
 
     /**
@@ -57,8 +57,12 @@ class joke_component implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output): stdClass {
         $data = new stdClass();
-        $data->joke_delivery=$this->resp["delivery"];
-        $data->joke_setup=$this->resp["setup"];
+        if (isset($this->resp["delivery"])) {
+            $data->joke_delivery = $this->resp["delivery"];
+            $data->joke_setup = $this->resp["setup"];
+        } else {
+            $data->joke = $this->resp["joke"];
+        }
         return $data;
     }
 

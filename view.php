@@ -13,7 +13,7 @@ require_once('../../config.php');
 require_once('lib.php');
 require_once('../../lib/filelib.php');
 
-global $OUTPUT,$PAGE,$DB;
+global $OUTPUT,$PAGE,$DB,$USER;
 defined('MOODLE_INTERNAL') || die();
 
 
@@ -41,14 +41,8 @@ $joke_config=jokeofday::get($cm);
         //$joke_config = $DB->get_record('jokeofday',$where, '*', MUST_EXIST);
         //$joke_config = $DB->get_record_sql('SELECT * FROM mdl_jokeofday WHERE id = ?', [$id]);
 
+$resp = jokeofday_joke::get_joke($joke_config);
 
-
-
-$curl = new curl();
-$url = jokeofday::get_url($joke_config);
-$resp = $curl->get($url);
-$resp = json_decode($resp, true);
-jokeofday_joke::update_or_insert($resp);
 
 
 //echo"<pre>";

@@ -16,17 +16,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * jokeofday cache definitions.
  *
- * @package     mod_jokeofday
- * @copyright   2022 Marc Marc@Capde.com
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_jokeofday
+ * @category   cache
+ * @copyright  2022 3ipunt
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
-if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_configduration('jokeofday/maxtime',
-        'Tiempo maximo', 'descripcion', 24*3600, 3600));
-}
-
+$definitions = array(
+    // This MUST NOT be a local cache, sorry cluster lovers.
+    'jokesdata' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+//        'simplekeys' => true, // The course id or 0 for global.
+//        'simpledata' => false,
+//        'staticacceleration' => true,
+//        'staticaccelerationsize' => 30,
+    ),
+);

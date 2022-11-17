@@ -25,7 +25,9 @@
 
 namespace mod_jokeofday;
 
+use cache;
 use cm_info;
+use curl;
 
 /**
  * jokeofday class
@@ -37,6 +39,7 @@ use cm_info;
 class jokeofday_joke
 {
     const TABLE = "jokeofday_jokes";
+
     public static function get(cm_info $cm)
     {
         global $DB;
@@ -45,6 +48,54 @@ class jokeofday_joke
             'id' => $cm->instance
         );
         return $DB->get_record(self::TABLE, $where, '*', MUST_EXIST);
+    }
+    public static function has_expired($timecreated) {
+        return false;
+        $maxtime=get_config('jokeofday','maxtime');
+//        echo"<pre>";
+//        var_dump($maxtime);
+//        die();
+        return time() - (($timecreated)) > $maxtime;
+    }
+
+    /**
+     * request.
+     *
+     * @param $joke_config
+     * @param $cache
+     * @param string $key
+     * @return mixed
+     */
+    public static function request($joke_config,$cache,$key){
+        $curl = new curl();
+        $url = jokeofday::get_url($joke_config);
+        $resp = $curl->get($url);
+        $resp = json_decode($resp, true);
+        jokeofday_joke::update_or_insert($resp);
+        $savecache = $resp;
+        $savecache["timecreated"] = time();
+        $cache->set($key, $savecache);
+        return $resp;
+    }
+    public static function get_joke($joke_config){
+        global $USER;
+
+        $cache = cache::make('mod_jokeofday', 'jokesdata');
+
+        $key = 'joke_' . $USER->id;
+        $data = $cache->get($key);
+
+        if(!$data){
+            $resp = self::request($joke_config,$cache,$key);
+        }else{
+            if(self::has_expired($data["timecreated"])){
+                $cache->delete($key);
+                $resp = self::request($joke_config,$cache,$key);
+            }else{
+                $resp = $data;
+            }
+        }
+        return $resp;
     }
     public static function joke_exists($jokeid){
         global $DB;

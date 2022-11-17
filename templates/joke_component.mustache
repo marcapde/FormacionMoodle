@@ -1,10 +1,12 @@
 <div class="card">
     <div class="card-header">Today's Joke is...</div>
     <div class="card-body">
+        {{#joke}}
+            <p>{{joke}}</p>
+        {{/joke}}
         <p>{{joke_setup}}</p>
         {{#joke_delivery}}
             <p>{{joke_delivery}}</p>
         {{/joke_delivery}}
     </div>
 </div>
-{{name}}
