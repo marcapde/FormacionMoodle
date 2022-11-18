@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,6 +26,6 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configduration('jokeofday/maxtime',
-        'Tiempo maximo', 'descripcion', 24*3600, 3600));
+        'Tiempo maximo', 'descripcion', 24 * 3600, 3600));
 }
 

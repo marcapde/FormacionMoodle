@@ -34,32 +34,40 @@ use cm_info;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class jokeofday {
-    const TABLE="jokeofday";
-    public static function get(cm_info $cm){
+    const TABLE = "jokeofday";
+
+    /**
+     * Get record for the actual course module
+     * @param cm_info $cm
+     * @return false|mixed|\stdClass
+     * @throws \dml_exception
+     */
+    public static function get(cm_info $cm) {
         global $DB;
         // Get request settings.
-        $where=array(
+        $where = array(
             'id' => $cm->instance
         );
-        return $DB->get_record(self::TABLE,$where, '*', MUST_EXIST);
+        return $DB->get_record(self::TABLE, $where, '*', MUST_EXIST);
     }
-    public static function get_url($joke_config){
+
+    /**
+     * @param object $jokeconfig element of the table jokeofday
+     * @return string url to use for the API
+     */
+    public static function get_url($jokeconfig) {
 
         $url = 'https://v2.jokeapi.dev/joke/';
-        if($joke_config->categories==""){
+        if ($jokeconfig->categories == "") {
             $url = $url . "Any";
-        }else{
-            $url = $url . $joke_config->categories;
+        } else {
+            $url = $url . $jokeconfig->categories;
         }
-        if($joke_config->blacklist!=""){
+        if ($jokeconfig->blacklist != "") {
             $url = $url . "?blacklistFlags=";
-            $url = $url . $joke_config->blacklist;
+            $url = $url . $jokeconfig->blacklist;
         }
-//        echo"<pre>";
-//        var_dump($url);
-//        die();
         return $url;
-
     }
-
 }
+

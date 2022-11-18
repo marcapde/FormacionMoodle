@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,14 +22,12 @@
  * @copyright  2022 3ipunt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 $definitions = array(
     // This MUST NOT be a local cache, sorry cluster lovers.
     'jokesdata' => array(
         'mode' => cache_store::MODE_APPLICATION,
-//        'simplekeys' => true, // The course id or 0 for global.
-//        'simpledata' => false,
-//        'staticacceleration' => true,
-//        'staticaccelerationsize' => 30,
+
     ),
 );

@@ -36,48 +36,46 @@ use curl;
  * @copyright  2022 3ipunt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class jokeofday_joke
-{
+class jokeofday_joke {
     const TABLE = "jokeofday_jokes";
 
-    public static function get(cm_info $cm)
-    {
-        global $DB;
-        // Get request settings.
-        $where = array(
-            'id' => $cm->instance
-        );
-        return $DB->get_record(self::TABLE, $where, '*', MUST_EXIST);
-    }
+    /**
+     * @param int $timecreated time when a certain joke was saved in cache
+     * @return bool true if expired | false if not
+     * @throws \dml_exception
+     */
     public static function has_expired($timecreated) {
-        return false;
-        $maxtime=get_config('jokeofday','maxtime');
-//        echo"<pre>";
-//        var_dump($maxtime);
-//        die();
+        $maxtime = get_config('jokeofday', 'maxtime');
         return time() - (($timecreated)) > $maxtime;
     }
 
     /**
-     * request.
+     * request to the JokeAPI.
      *
-     * @param $joke_config
+     * @param $jokeconfig
      * @param $cache
      * @param string $key
      * @return mixed
      */
-    public static function request($joke_config,$cache,$key){
+    public static function request($jokeconfig, $cache, $key) {
         $curl = new curl();
-        $url = jokeofday::get_url($joke_config);
+        $url = jokeofday::get_url($jokeconfig);
         $resp = $curl->get($url);
         $resp = json_decode($resp, true);
-        jokeofday_joke::update_or_insert($resp);
+        self::update_or_insert($resp);
         $savecache = $resp;
         $savecache["timecreated"] = time();
         $cache->set($key, $savecache);
         return $resp;
     }
-    public static function get_joke($joke_config){
+
+    /**
+     * @param object $jokeconfig settings for the call to the API.
+     * @return array|bool|float|int|mixed|\stdClass|string
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public static function get_joke($jokeconfig) {
         global $USER;
 
         $cache = cache::make('mod_jokeofday', 'jokesdata');
@@ -85,19 +83,25 @@ class jokeofday_joke
         $key = 'joke_' . $USER->id;
         $data = $cache->get($key);
 
-        if(!$data){
-            $resp = self::request($joke_config,$cache,$key);
-        }else{
-            if(self::has_expired($data["timecreated"])){
+        if (!$data) {
+            $resp = self::request($jokeconfig, $cache, $key);
+        } else {
+            if (self::has_expired($data["timecreated"])) {
                 $cache->delete($key);
-                $resp = self::request($joke_config,$cache,$key);
-            }else{
+                $resp = self::request($jokeconfig, $cache, $key);
+            } else {
                 $resp = $data;
             }
         }
         return $resp;
     }
-    public static function joke_exists($jokeid){
+
+    /**
+     * @param int $jokeid
+     * @return false|mixed|\stdClass
+     * @throws \dml_exception
+     */
+    public static function joke_exists($jokeid) {
         global $DB;
         // Get request settings.
         $where = array(
@@ -105,42 +109,39 @@ class jokeofday_joke
         );
         return $DB->get_record(self::TABLE, $where, '*', IGNORE_MISSING);
     }
-    //update or insert
-    public static function update_or_insert($joke){
+    // Update or insert.
+
+    /**
+     * @param object $joke
+     * @return bool|int
+     * @throws \dml_exception
+     */
+    public static function update_or_insert($joke) {
         global $DB;
-        // Check if it's alredy on the table
+        // Check if it's alredy on the table.
         $record = self::joke_exists($joke["id"]);
-        $record ? $update=true : $update=false;
+        $record ? $update = true : $update = false;
 
         $record->category = $joke["category"];
-        $record->joke_id =  $joke["id"];
-        $record->lang =     $joke["lang"];
-        $record->type =     $joke["type"] ;
-        $record->safe =     $joke["safe"];
-        // $joke["joke"] ? $record->joke =$joke["joke"] : $record->joke =array('setup' => $joke["setup"],'delivery'=>$joke["delivery"]);
-        (isset($joke["joke"])) ? $record->joke =$joke["joke"] : ($record->joke= $joke["setup"] . '//' . $joke["delivery"]);
-        $record->flags = ""; // implode(',',$joke["flags"]);
-        $allflags = ["nsfw","religious","political","racist","sexist","explicit"];
-        for($i=0;$i<count($joke["flags"]);$i++){
-            if ($joke["flags"][$allflags[$i]] != ""){
+        $record->joke_id = $joke["id"];
+        $record->lang = $joke["lang"];
+        $record->type = $joke["type"];
+        $record->safe = $joke["safe"];
+        (isset($joke["joke"])) ? $record->joke = $joke["joke"] : ($record->joke = $joke["setup"] . '//' . $joke["delivery"]);
+        $record->flags = "";
+        $allflags = ["nsfw", "religious", "political", "racist", "sexist", "explicit"];
+        for ($i = 0; $i < count($joke["flags"]); $i++) {
+            if ($joke["flags"][$allflags[$i]] != "") {
                 $record->flags = $record->flags . $allflags[$i] . ",";
             }
         }
-        if($record->flags != ""){
+        if ($record->flags != "") {
             $record->flags = substr($record->flags, 0, -1);
         }
-//        echo"<pre>";
-//        var_dump($record);
-//        die();
-
-        if($update){
+        if ($update) {
             return $DB->update_record(self::TABLE, $record);
-        }else{
+        } else {
             return $DB->insert_record(self::TABLE, $record);
         }
-//        echo"<pre>";
-//        var_dump($record);
-//        die();
-//        return false;
     }
 }

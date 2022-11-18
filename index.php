@@ -24,6 +24,8 @@
 require_once('../../config.php');
 $id = required_param('id', PARAM_INT);
 
+global $OUTPUT;
+
 echo $OUTPUT->header();
 
 die("here I am");

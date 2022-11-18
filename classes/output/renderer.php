@@ -23,7 +23,6 @@
  */
 namespace mod_jokeofday\output;
 
-defined('MOODLE_INTERNAL') || die;
 
 use moodle_exception;
 use plugin_renderer_base;

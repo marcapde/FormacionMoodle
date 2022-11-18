@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,7 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
 
 /**
  * List of features supported in URL module
@@ -31,61 +29,80 @@ defined('MOODLE_INTERNAL') || die;
  * @return mixed True if module supports feature, false if not, null if doesn't know or string for the module purpose.
  */
 function jokeofday_supports($feature) {
-    switch($feature) {
-        case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
-        case FEATURE_GROUPS:                  return false;
-        case FEATURE_GROUPINGS:               return false;
-        case FEATURE_MOD_INTRO:               return true;
-        case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
-        case FEATURE_GRADE_HAS_GRADE:         return false;
-        case FEATURE_GRADE_OUTCOMES:          return false;
-        case FEATURE_BACKUP_MOODLE2:          return true;
-        case FEATURE_SHOW_DESCRIPTION:        return true;
-        case FEATURE_MOD_PURPOSE:             return MOD_PURPOSE_OTHER;
-
-        default: return null;
+    switch($feature)
+    {
+        case FEATURE_MOD_ARCHETYPE:
+            return MOD_ARCHETYPE_RESOURCE;
+        case FEATURE_GRADE_OUTCOMES:
+        case FEATURE_GRADE_HAS_GRADE:
+        case FEATURE_COMPLETION_TRACKS_VIEWS:
+        case FEATURE_GROUPINGS:
+        case FEATURE_GROUPS:
+            return false;
+        case FEATURE_SHOW_DESCRIPTION:
+        case FEATURE_BACKUP_MOODLE2:
+        case FEATURE_MOD_INTRO:
+            return true;
+        case FEATURE_MOD_PURPOSE:
+            return MOD_PURPOSE_OTHER;
+        default:
+            return null;
     }
 }
-function jokeofday_add_instance($instance){
- global $DB;
- global $USER;
+
+/**
+ * @param $instance
+ * @return bool|int
+ * @throws dml_exception
+ */
+function jokeofday_add_instance($instance) {
+     global $DB;
+     global $USER;
 
      $instance->timecreated = time();
      $instance->timemodified = time();
      $instance->userid = $USER->id;
 
-    $categories = implode(',',$instance->categories);
+    $categories = implode(',', $instance->categories);
 
     $instance->categories = $categories;
 
     $instance->id = $DB->insert_record('jokeofday', $instance);
-    //$DB->set_field('jokeofday','instance',$instance->id);
- return $instance->id;
+    return $instance->id;
 
 }
-function jokeofday_update_instance($instance){
+
+/**
+ * @param object $instance
+ * @return bool
+ * @throws dml_exception
+ */
+function jokeofday_update_instance($instance): bool {
     global $DB;
-    $instance->timemodified=time();
-    $instance->id=$instance->instance;
-//    echo"<pre>";
-//    var_dump($instance);
-//    die();
-    $categories = implode(',',$instance->categories);
+    $instance->timemodified = time();
+    $instance->id = $instance->instance;
+
+    $categories = implode(',', $instance->categories);
     $instance->categories = $categories;
 
-    return $DB->update_record('jokeofday',$instance);
+    return $DB->update_record('jokeofday', $instance);
 }
-function jokeofday_delete_instance($id){
-    global $DB;
-    // $DB->delete_records('jokeofday',$id);
 
-    if (! $instance = $DB->get_record("jokeofday", array("id"=>$id))) {
+/**
+ * @param $id
+ * @return bool
+ * @throws dml_exception
+ */
+function jokeofday_delete_instance($id): bool {
+    global $DB;
+
+    if (!$instance = $DB->get_record("jokeofday", array("id" => $id))) {
         return false;
     }
 
     $result = true;
 
-    if (! $DB->delete_records("jokeofday", array("id"=>$instance->id))) {
+    if (! $DB->delete_records("jokeofday", array("id" => $instance->id))) {
         $result = false;
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once ($CFG->dirroot.'/course/moodleform_mod.php');
+require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
 class mod_jokeofday_mod_form extends moodleform_mod {
 
-    function definition() {
+    public function definition() {
         global $PAGE;
 
         $PAGE->force_settings_menu();
@@ -38,7 +37,7 @@ class mod_jokeofday_mod_form extends moodleform_mod {
 
         $mform->addElement('header', 'generalhdr', get_string('general'));
 
-        $mform->addElement('text', 'name', get_string('name'), array('size'=>'48'));
+        $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -58,20 +57,18 @@ class mod_jokeofday_mod_form extends moodleform_mod {
             'Spooky' => 'Spooky',
             'Christmas' => 'Christmas'
         );
-        $mform-> addElement('select','categories', get_string('categories', 'jokeofday'),$options);
-        // $mform->setType('categories', PARAM_TEXT);
+        $mform->addElement('select', 'categories', get_string('categories', 'jokeofday'), $options);
         $mform->getElement('categories')->setMultiple(true);
         // Add blacklist.
-        $mform-> addElement('text','blacklist', get_string('blacklist', 'jokeofday'));
+        $mform->addElement('text', 'blacklist', get_string('blacklist', 'jokeofday'));
         $mform->setType('blacklist', PARAM_TEXT);
-        //Add numjokes.
-        $mform-> addElement('text','numjokes', get_string('numjokes', 'jokeofday'));
+        // Add numjokes.
+        $mform->addElement('text', 'numjokes', get_string('numjokes', 'jokeofday'));
         $mform->setType('numjokes', PARAM_TEXT);
         $mform->addRule('numjokes', null, 'required', null, 'client');
         $this->standard_coursemodule_elements();
 
-//-------------------------------------------------------------------------------
-// buttons
+        // Buttons.
         $this->add_action_buttons(true, false, null);
 
     }

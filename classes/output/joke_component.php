@@ -23,7 +23,6 @@
  */
 
 namespace mod_jokeofday\output;
-defined('MOODLE_INTERNAL') || die();
 
 use dml_exception;
 use renderable;

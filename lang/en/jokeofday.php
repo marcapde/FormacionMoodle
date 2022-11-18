@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Joke of the Day';
 $string['modulename'] = 'Joke of the Day';
 $string['pluginadministration'] = 'Administration Joke of Day';
-$string['modulenameplural'] ='Jokes of the Day';
+$string['modulenameplural'] = 'Jokes of the Day';
 
 $string['categories'] = 'Categories';
 $string['numjokes'] = 'Number of jokes';

@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Plugin version and other meta-data are defined here.
  *
@@ -13,11 +28,11 @@ require_once('../../config.php');
 require_once('lib.php');
 require_once('../../lib/filelib.php');
 
-global $OUTPUT,$PAGE,$DB,$USER;
+global $OUTPUT, $PAGE, $DB, $USER;
 defined('MOODLE_INTERNAL') || die();
 
 
-$id = required_param('id', PARAM_INT);    // Course Module ID
+$id = required_param('id', PARAM_INT);    // Course Module ID.
 list($course, $cm) = get_course_and_cm_from_cmid($id);
 $title = get_string('pluginname', 'jokeofday');
 $pagetitle = $title;
@@ -30,38 +45,16 @@ $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
 require_login($course->id);
-$joke_config=jokeofday::get($cm);
-        //echo"<pre>";
-        //var_dump($joke_config);
-        //die();
-        // Get request settings.
-        //$where=array(
-        //    'id' => $cm->instance
-        //);
-        //$joke_config = $DB->get_record('jokeofday',$where, '*', MUST_EXIST);
-        //$joke_config = $DB->get_record_sql('SELECT * FROM mdl_jokeofday WHERE id = ?', [$id]);
+$jokeconfig = jokeofday::get($cm);
 
-$resp = jokeofday_joke::get_joke($joke_config);
+$resp = jokeofday_joke::get_joke($jokeconfig);
 
-
-
-//echo"<pre>";
-//var_dump($resp);
-//die();
 echo $OUTPUT->header();
 
 echo $OUTPUT->heading($pagetitle);
 
-//$templatecontext = (object)[
-//    'joke_setup' => $resp["setup"],
-//    'joke_delivery' => $resp["delivery"]
-//];
-// echo $OUTPUT->render_from_template('jokeofday/joke_view', $templatecontext);
 $component = new \mod_jokeofday\output\joke_component($resp);
 $output = $PAGE->get_renderer('mod_jokeofday');
 echo $output->render($component);
-//echo $resp["setup"];
-//if ($resp["delivery"]){
-//    echo $resp["delivery"];
-//}
+
 echo $OUTPUT->footer();
