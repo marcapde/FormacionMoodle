@@ -35,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
 $id = required_param('id', PARAM_INT);    // Course Module ID.
 list($course, $cm) = get_course_and_cm_from_cmid($id);
 $title = get_string('pluginname', 'jokeofday');
-$pagetitle = $title;
 
 $context = context_module::instance($id);
 $PAGE->set_context($context);
@@ -45,15 +44,12 @@ $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
 require_login($course->id);
-$jokeconfig = jokeofday::get($cm);
-
-$resp = jokeofday_joke::get_joke($jokeconfig);
 
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading($pagetitle);
+echo $OUTPUT->heading($title);
 
-$component = new \mod_jokeofday\output\joke_component($resp);
+$component = new \mod_jokeofday\output\joke_component($cm);
 $output = $PAGE->get_renderer('mod_jokeofday');
 echo $output->render($component);
 

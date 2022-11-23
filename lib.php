@@ -64,8 +64,10 @@ function jokeofday_add_instance($instance) {
      $instance->userid = $USER->id;
 
     $categories = implode(',', $instance->categories);
+    $blacklist = implode (',', $instance->blacklist);
 
     $instance->categories = $categories;
+    $instance->blacklist = $blacklist;
 
     $instance->id = $DB->insert_record('jokeofday', $instance);
     return $instance->id;
@@ -83,7 +85,10 @@ function jokeofday_update_instance($instance): bool {
     $instance->id = $instance->instance;
 
     $categories = implode(',', $instance->categories);
+    $blacklist = implode (',', $instance->blacklist);
+
     $instance->categories = $categories;
+    $instance->blacklist = $blacklist;
 
     return $DB->update_record('jokeofday', $instance);
 }

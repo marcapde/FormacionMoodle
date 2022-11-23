@@ -27,7 +27,10 @@ namespace mod_jokeofday;
 
 use cache;
 use cm_info;
+use coding_exception;
 use curl;
+use dml_exception;
+use stdClass;
 
 /**
  * jokeofday class
@@ -56,6 +59,7 @@ class jokeofday_joke {
      * @param $cache
      * @param string $key
      * @return mixed
+     * @throws dml_exception
      */
     public static function request($jokeconfig, $cache, $key) {
         $curl = new curl();
@@ -72,8 +76,8 @@ class jokeofday_joke {
     /**
      * @param object $jokeconfig settings for the call to the API.
      * @return array|bool|float|int|mixed|\stdClass|string
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function get_joke($jokeconfig) {
         global $USER;
@@ -98,8 +102,8 @@ class jokeofday_joke {
 
     /**
      * @param int $jokeid
-     * @return false|mixed|\stdClass
-     * @throws \dml_exception
+     * @return false|mixed|stdClass
+     * @throws dml_exception
      */
     public static function joke_exists($jokeid) {
         global $DB;

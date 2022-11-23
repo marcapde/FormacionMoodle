@@ -28,6 +28,5 @@ $definitions = array(
     // This MUST NOT be a local cache, sorry cluster lovers.
     'jokesdata' => array(
         'mode' => cache_store::MODE_APPLICATION,
-
     ),
 );

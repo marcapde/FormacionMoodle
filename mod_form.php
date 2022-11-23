@@ -60,11 +60,19 @@ class mod_jokeofday_mod_form extends moodleform_mod {
         $mform->addElement('select', 'categories', get_string('categories', 'jokeofday'), $options);
         $mform->getElement('categories')->setMultiple(true);
         // Add blacklist.
-        $mform->addElement('text', 'blacklist', get_string('blacklist', 'jokeofday'));
-        $mform->setType('blacklist', PARAM_TEXT);
+        $bloptions = array(
+            'nsfw' => 'nsfw',
+            'religious' => 'religious',
+            'political' => 'political',
+            'racist' => 'racist',
+            'sexist' => 'sexist',
+            'explicit' => 'explicit'
+        );
+        $mform->addElement('select', 'blacklist', get_string('blacklist', 'jokeofday'), $bloptions);
+        $mform->getElement('blacklist')->setMultiple(true);
         // Add numjokes.
         $mform->addElement('text', 'numjokes', get_string('numjokes', 'jokeofday'));
-        $mform->setType('numjokes', PARAM_TEXT);
+        $mform->setType('numjokes', PARAM_INT);
         $mform->addRule('numjokes', null, 'required', null, 'client');
         $this->standard_coursemodule_elements();
 

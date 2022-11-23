@@ -25,6 +25,8 @@
 namespace mod_jokeofday\output;
 
 use dml_exception;
+use mod_jokeofday\jokeofday;
+use mod_jokeofday\jokeofday_joke;
 use renderable;
 use renderer_base;
 use stdClass;
@@ -38,13 +40,17 @@ use templatable;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class joke_component implements renderable, templatable {
-    public $resp;
+    /** @var array|bool|float|int|mixed|stdClass|string response */
+    protected $resp;
+    /** @var false|mixed|stdClass joke config */
+    protected $jokeconfig;
     /**
      *  constructor.
-     * @param $resp
+     * @param $cm
      */
-    public function __construct($resp) {
-        $this->resp = $resp;
+    public function __construct(\cm_info $cm) {
+        $this->jokeconfig = jokeofday::get($cm);
+        $this->resp = jokeofday_joke::get_joke($this->jokeconfig);
     }
 
     /**

@@ -21,8 +21,12 @@
  * @copyright   2022 Marc Marc@Capde.com
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
+
 require_once('../../config.php');
 $id = required_param('id', PARAM_INT);
+list($course, $cm) = get_course_and_cm_from_cmid($id);
+require_login($course->id);
 
 global $OUTPUT;
 

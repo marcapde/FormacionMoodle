@@ -31,3 +31,4 @@ $string['modulenameplural'] = 'Jokes of the Day';
 $string['categories'] = 'Categories';
 $string['numjokes'] = 'Number of jokes';
 $string['blacklist'] = 'Blacklist';
+$string['todaysjoke'] = "Today's Joke is...";
