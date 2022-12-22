@@ -27,6 +27,7 @@ use mod_jokeofday\jokeofday_joke;
 require_once('../../config.php');
 require_once('lib.php');
 require_once('../../lib/filelib.php');
+require_once('../../config.php');
 
 global $OUTPUT, $PAGE, $DB, $USER;
 defined('MOODLE_INTERNAL') || die();

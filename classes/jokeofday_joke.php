@@ -99,6 +99,14 @@ class jokeofday_joke {
         }
         return $resp;
     }
+    public static function get_joke_from_id ($jokeid) {
+        global $DB;
+        // Get request settings.
+        $where = array(
+            'joke_id' => $jokeid
+        );
+        return $DB->get_record(self::TABLE, $where);
+    }
 
     /**
      * @param int $jokeid
@@ -106,12 +114,7 @@ class jokeofday_joke {
      * @throws dml_exception
      */
     public static function joke_exists($jokeid) {
-        global $DB;
-        // Get request settings.
-        $where = array(
-            'joke_id' => $jokeid
-        );
-        return $DB->get_record(self::TABLE, $where, '*', IGNORE_MISSING);
+        return (bool)self::get_joke_from_id($jokeid);
     }
     // Update or insert.
 

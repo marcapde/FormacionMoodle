@@ -29,4 +29,39 @@
             <p>{{joke_delivery}}</p>
         {{/joke_delivery}}
     </div>
+    <form data-region="jokeForm">
+        <div class="form-group col-md-4">
+            <label for="selectvalue">Example multiple select</label>
+            <select class="form-control" id="selectvalue" data-action="score">
+                {{{options}}}
+            </select>
+        </div>
+<!--        <input type="submit" value="Submit">-->
+    </form>
 </div>
+<br>
+<div class="container mx-auto mt-4">
+    <div class="row">
+        {{#scores}}
+        <div class="col-md-4" style="display: inline-block">
+            <div class="card">
+                <div class="card-header">{{#str}} meanjoke, mod_jokeofday {{/str}} {{score}}</div>
+                <div class="card-body">
+                    {{#joke2}}
+                        <p>{{joke2}}</p>
+                    {{/joke2}}
+
+                </div>
+            </div>
+        </div>
+        {{/scores}}
+    </div>
+</div>
+
+{{#js}}
+    require(['mod_jokeofday/score'], function(score) {
+        score.initScore('[data-region="jokeForm"]', '{{jokeid}}','{{cmid}}');
+    });
+{{/js}}
+
+

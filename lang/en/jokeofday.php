@@ -32,3 +32,5 @@ $string['categories'] = 'Categories';
 $string['numjokes'] = 'Number of jokes';
 $string['blacklist'] = 'Blacklist';
 $string['todaysjoke'] = "Today's Joke is...";
+$string['meanscore'] = "Mean score of the joke: ";
+$string['meanjoke'] = "Mean score of the joke: ";

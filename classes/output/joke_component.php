@@ -24,9 +24,11 @@
 
 namespace mod_jokeofday\output;
 
+use cm_info;
 use dml_exception;
 use mod_jokeofday\jokeofday;
 use mod_jokeofday\jokeofday_joke;
+use mod_jokeofday\jokeofday_score;
 use renderable;
 use renderer_base;
 use stdClass;
@@ -44,13 +46,16 @@ class joke_component implements renderable, templatable {
     protected $resp;
     /** @var false|mixed|stdClass joke config */
     protected $jokeconfig;
+    /** @var cm_info  course module*/
+    protected $cm;
     /**
      *  constructor.
      * @param $cm
      */
-    public function __construct(\cm_info $cm) {
+    public function __construct(cm_info $cm) {
         $this->jokeconfig = jokeofday::get($cm);
         $this->resp = jokeofday_joke::get_joke($this->jokeconfig);
+        $this->cm = $cm;
     }
 
     /**
@@ -68,7 +73,31 @@ class joke_component implements renderable, templatable {
         } else {
             $data->joke = $this->resp["joke"];
         }
+        $data->jokeid = $this->resp["id"];
+        $data->cmid = $this->cm->id;
+        $selected = jokeofday_score::get_selected($data->jokeid);
+
+        $arr = array("", "", "", "", "", "", "");
+        $selected ? $arr[$selected->value + 1] = "selected" : $arr[0] = "selected";
+        $data->options = '';
+
+        for ($i = 0; $i < count($arr); $i++) {
+            $data->options .= '<option ' . $arr[$i] . ' value="' . ($i - 1) . '">';
+            $i == 0 ? $data->options .= 'Score...' : $data->options .= ($i - 1);
+            $data->options .= '</option>';
+        }
+        // Display all scores.
+        $allrecords = jokeofday_score::get_all_jokeids_from_cm($this->cm->id);
+        $data->scores = array();
+        foreach ($allrecords as $r) {
+            $rdata = jokeofday_joke::get_joke_from_id($r);
+
+            $newarray = array ('joke2' => $rdata->joke, 'score' => jokeofday_score::get_mean($r));
+            array_push($data->scores, $newarray);
+
+        }
         return $data;
     }
 
 }
+

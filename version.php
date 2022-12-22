@@ -24,6 +24,6 @@
 defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'mod_jokeofday';
 $plugin->release = '0.1.2';
-$plugin->version = 2022112300;
+$plugin->version = 2022112301;
 $plugin->requires = 2021051700;
 $plugin->maturity = MATURITY_BETA;
